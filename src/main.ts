@@ -11,7 +11,13 @@ import "@ionic/vue/css/structure.css";
 import "@ionic/vue/css/typography.css";
 
 const app = createApp(App);
-app.provide(IMessageServiceKey, new MessageApiService("url"));
+app.provide(
+  IMessageServiceKey,
+  new MessageApiService(
+    "http://localhost:3209/messenger/hub",
+    "http://localhost:3209/api/messenger"
+  )
+);
 app.use(IonicVue);
 // app.use(router);
 app.mount("#app");

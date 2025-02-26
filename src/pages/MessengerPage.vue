@@ -1,15 +1,33 @@
 <template>
-  <message-blob-component
-    sender="ewwwv fe"
-    text="dkemw ewfjnwfnmd vnjwnfqkj"
-    date="today"
-  />
+  <div>
+    <div v-for="(msg, index) in messages" :key="index">
+      <message-blob-component
+        :sender="msg.sender"
+        :text="msg.text"
+        :date="msg.date"
+      />
+    </div>
+
+    <input v-model="user" placeholder="Ваше имя" />
+    <input
+      v-model="text"
+      placeholder="Введите сообщение"
+      @keyup.enter="sendMessage"
+    />
+    <button @click="sendMessage">Отправить</button>
+  </div>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted } from "vue";
 import MessageBlobComponent from "../components/MessageBlobComponent.vue";
+import { useMessageService } from "../services/useMessageService";
 
-const messages = [
+const messageService = useMessageService();
+
+const user = ref("me");
+const text = ref("");
+const messages = ref<{ sender: string; text: string; date: string }[]>([
   {
     sender: "iefje HHHNNfe",
     text: "dreaming aboutewv",
@@ -20,10 +38,24 @@ const messages = [
     text: "okay!",
     date: "today",
   },
-  {
-    sender: "iefje HHHNNfe",
-    text: "War and Peace begins in the Russian city of St. Petersburg in 1805, as fear of Napoleon’s ongoing war making begins to set in. Most of the characters are introduced at a party, including Pierre Bezukhov, Andrey Bolkonsky, and the Kuragin and Rostov families. Much of the novel focuses on the interactions between the Bezukhovs, Bolkonskys, and the Rostovs. After their introduction, Andrey Bolkonsky and Nikolay Rostov go",
-    date: "today",
-  },
-];
+]);
+
+const sendMessage = async () => {
+  if (text.value.trim()) {
+    await messageService.sendMessage(user.value, text.value);
+    text.value = "";
+  }
+};
+
+onMounted(async () => {
+  await messageService.startConnection();
+
+  messageService.onReceiveMessage((sender: string, text: string) => {
+    messages.value.push({ sender, text, date: "today" });
+  });
+});
+
+onUnmounted(() => {
+  messageService.stopConnection();
+});
 </script>
