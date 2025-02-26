@@ -1,11 +1,23 @@
 <template>
   <div>
-    <div v-for="(msg, index) in messages" :key="index">
-      <message-blob-component
-        :sender="msg.user"
-        :text="msg.text"
-        :date="msg.timestamp"
-      />
+    <div
+      v-for="(msg, index) in messages"
+      :key="index"
+      class="messages-container"
+    >
+      <div
+        :class="{
+          sent: msg.user === nickname,
+          received: msg.user !== nickname,
+        }"
+      >
+        <message-blob-component
+          :sender="msg.user"
+          :text="msg.text"
+          :date="msg.timestamp"
+          :is-sent-by-me="msg.user === nickname"
+        />
+      </div>
     </div>
 
     <input v-model="user" placeholder="Ваше имя" />
@@ -20,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, computed } from "vue";
 import MessageBlobComponent from "../components/MessageBlobComponent.vue";
 import { useMessageService } from "../services/useMessageService";
 import type { Message } from "../types/Message";
@@ -31,6 +43,8 @@ const user = ref("me");
 const text = ref("");
 
 const inputValue = ref("");
+
+const nickname = computed(() => window.localStorage.getItem("nickname") || "");
 
 const messages = ref<Message[]>([
   {
@@ -71,3 +85,20 @@ onUnmounted(() => {
   messageService.stopConnection();
 });
 </script>
+
+<style scoped>
+.messages-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.sent {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.received {
+  display: flex;
+  justify-content: flex-start;
+}
+</style>

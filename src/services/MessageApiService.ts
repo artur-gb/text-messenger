@@ -21,9 +21,9 @@ export class MessageApiService implements IMessageService {
   async startConnection(): Promise<void> {
     try {
       await this.connection.start();
-      console.log("✅ SignalR Connected!");
+      console.log("SignalR Connected!");
     } catch (error) {
-      console.error("❌ SignalR Connection Error: ", error);
+      console.error("SignalR Connection Error: ", error);
       setTimeout(() => this.startConnection(), 5000);
     }
   }
@@ -40,7 +40,6 @@ export class MessageApiService implements IMessageService {
         callback(message);
       }
     );
-    // this.connection.on("ReceiveMessage", callback);
   }
 
   async sendMessage(message: Message): Promise<void> {
