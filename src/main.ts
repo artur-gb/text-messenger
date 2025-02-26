@@ -9,6 +9,7 @@ import "@ionic/vue/css/core.css";
 import "@ionic/vue/css/normalize.css";
 import "@ionic/vue/css/structure.css";
 import "@ionic/vue/css/typography.css";
+import { router } from "./router";
 
 const app = createApp(App);
 app.provide(
@@ -19,5 +20,5 @@ app.provide(
   )
 );
 app.use(IonicVue);
-// app.use(router);
+app.use(router);
 app.mount("#app");

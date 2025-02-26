@@ -2,9 +2,9 @@
   <div>
     <div v-for="(msg, index) in messages" :key="index">
       <message-blob-component
-        :sender="msg.sender"
+        :sender="msg.user"
         :text="msg.text"
-        :date="msg.date"
+        :date="msg.timestamp"
       />
     </div>
 
@@ -15,6 +15,7 @@
       @keyup.enter="sendMessage"
     />
     <button @click="sendMessage">Отправить</button>
+    <ion-input v-model="inputValue" type="text" placeholder="placeholder" />
   </div>
 </template>
 
@@ -22,27 +23,37 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import MessageBlobComponent from "../components/MessageBlobComponent.vue";
 import { useMessageService } from "../services/useMessageService";
+import type { Message } from "../types/Message";
 
 const messageService = useMessageService();
 
 const user = ref("me");
 const text = ref("");
-const messages = ref<{ sender: string; text: string; date: string }[]>([
+
+const inputValue = ref("");
+
+const messages = ref<Message[]>([
   {
-    sender: "iefje HHHNNfe",
+    user: "iefje HHHNNfe",
     text: "dreaming aboutewv",
-    date: "today",
+    timestamp: new Date().toISOString(),
   },
   {
-    sender: "me",
+    user: "me",
     text: "okay!",
-    date: "today",
+    timestamp: new Date().toISOString(),
   },
 ]);
 
 const sendMessage = async () => {
+  const timestamp = new Date().toISOString();
+
   if (text.value.trim()) {
-    await messageService.sendMessage(user.value, text.value);
+    await messageService.sendMessage({
+      user: user.value,
+      text: text.value,
+      timestamp: timestamp,
+    });
     text.value = "";
   }
 };
@@ -50,8 +61,9 @@ const sendMessage = async () => {
 onMounted(async () => {
   await messageService.startConnection();
 
-  messageService.onReceiveMessage((sender: string, text: string) => {
-    messages.value.push({ sender, text, date: "today" });
+  messageService.onReceiveMessage((message: Message) => {
+    console.log(message);
+    messages.value.push(message);
   });
 });
 

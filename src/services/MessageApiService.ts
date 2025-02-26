@@ -1,5 +1,6 @@
 import * as signalR from "@microsoft/signalr";
 import type { IMessageService } from "./IMessageService";
+import type { Message } from "../types/Message";
 
 export class MessageApiService implements IMessageService {
   private connection: signalR.HubConnection;
@@ -27,23 +28,33 @@ export class MessageApiService implements IMessageService {
     }
   }
 
-  onReceiveMessage(callback: (user: string, message: string) => void) {
-    this.connection.on("ReceiveMessage", callback);
+  onReceiveMessage(callback: (message: Message) => void) {
+    this.connection.on(
+      "ReceiveMessage",
+      (user: string, text: string) => {
+        const message: Message = {
+          user,
+          text,
+          timestamp: new Date().toISOString(),
+        };
+        callback(message);
+      }
+    );
+    // this.connection.on("ReceiveMessage", callback);
   }
 
-  async sendMessage(user: string, message: string): Promise<void> {
+  async sendMessage(message: Message): Promise<void> {
     try {
-      const timestamp = new Date().toISOString();
-      await fetch(`${this.apiUrl}/send`, {
+      const response = await fetch(`${this.apiUrl}/send`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user, text: message, timestamp }),
+        body: JSON.stringify(message),
         mode: "no-cors",
       });
 
-      // if (!response.ok) {
-      //   throw new Error("Error sending message");
-      // }
+      if (!response.ok) {
+        throw new Error("Error sending message");
+      }
     } catch (error) {
       console.error(error);
     }

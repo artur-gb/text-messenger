@@ -1,10 +1,10 @@
 import type { InjectionKey } from "vue";
-// import { LogbookRecord } from "../entities/Logbook";
+import type { Message } from "../types/Message";
 
 export interface IMessageService {
   startConnection(): Promise<void>;
-  onReceiveMessage: (callback: (user: string, message: string) => void) => void;
-  sendMessage: (user: string, message: string) => Promise<void>;
+  onReceiveMessage: (callback: (message: Message) => void) => void;
+  sendMessage: (message: Message) => Promise<void>;
   stopConnection: () => void;
 }
 
