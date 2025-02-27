@@ -39,21 +39,34 @@ export class MessageApiService implements IMessageService {
     });
   }
 
-  async sendMessage(message: Message): Promise<void> {
-    try {
-      console.log(message);
-      const response = await fetch(`${this.apiUrl}/send`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(message),
-        // mode: "no-cors",
-      });
+  // async sendMessage(message: Message): Promise<void> {
+  //   try {
+  //     console.log(message);
+  //     const response = await fetch(`${this.apiUrl}/send`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify(message),
+  //       // mode: "no-cors",
+  //     });
 
-      if (!response.ok) {
-        throw new Error("Error sending message");
+  //     if (!response.ok) {
+  //       throw new Error("Error sending message");
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
+
+  async sendMessage(...args: any[]): Promise<void> {
+    try {
+      if (this.connection.state !== signalR.HubConnectionState.Connected) {
+        console.error("SignalR is not connected");
+        return;
       }
+
+      await this.connection.invoke("SendMessage", ...args);
     } catch (error) {
-      console.error(error);
+      console.error("Error sending message:", error);
     }
   }
 

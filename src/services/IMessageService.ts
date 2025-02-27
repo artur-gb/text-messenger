@@ -4,7 +4,8 @@ import type { Message } from "../types/Message";
 export interface IMessageService {
   startConnection(): Promise<void>;
   onReceiveMessage: (callback: (message: Message) => void) => void;
-  sendMessage: (message: Message) => Promise<void>;
+  // sendMessage: (message: Message) => Promise<void>;
+  sendMessage(...args: any[]): Promise<void>
   stopConnection: () => void;
 }
 

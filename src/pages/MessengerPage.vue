@@ -60,14 +60,15 @@ const messages = ref<Message[]>([
 ]);
 
 const sendMessage = async () => {
-  const timestamp = new Date().toISOString();
+  // const timestamp = new Date().toISOString();
 
   if (text.value.trim()) {
-    await messageService.sendMessage({
-      user: user.value,
-      text: text.value,
-      timestamp: timestamp,
-    });
+    await messageService.sendMessage(user.value, text.value);
+    // await messageService.sendMessage({
+    //   user: user.value,
+    //   text: text.value,
+    //   timestamp: timestamp,
+    // });
     text.value = "";
   }
 };
@@ -76,7 +77,6 @@ onMounted(async () => {
   await messageService.startConnection();
 
   messageService.onReceiveMessage((message: Message) => {
-    console.log(message);
     messages.value.push(message);
   });
 });
