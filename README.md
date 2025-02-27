@@ -2,12 +2,14 @@
 
 This project is a Vue 3-based messaging application that utilizes SignalR for real-time communication and IonicVue for UI components
 
+```
 src/
 ├── components/        # Reusable UI components
 ├── pages/             # Application views or pages
 ├── router/            # Vue Router setup and route management
 ├── services/          # Services for API calls and SignalR integration
 ├── types/             # TypeScript types and interfaces
+```
 
 To run the code:
 `npm install` then `npm run dev`
