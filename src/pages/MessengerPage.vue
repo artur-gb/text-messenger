@@ -1,11 +1,9 @@
 <template>
-  <div>
-    <div
-      v-for="(msg, index) in messages"
-      :key="index"
-      class="messages-container"
-    >
+  <div class="chat-container">
+    <div class="messages-container">
       <div
+        v-for="(msg, index) in messages"
+        :key="index"
         :class="{
           sent: msg.user === nickname,
           received: msg.user !== nickname,
@@ -27,7 +25,7 @@
         placeholder="Enter text..."
         class="message-input"
       />
-      <ion-button @click="sendMessage" class="send-button"> Send </ion-button>
+      <ion-button @click="sendMessage" class="send-button">Send</ion-button>
     </div>
   </div>
 </template>
@@ -41,23 +39,12 @@ import type { Message } from "../types/Message";
 
 const messageService = useMessageService();
 
-const user = ref("me");
+const user = ref("");
 const text = ref("");
 
 const nickname = computed(() => window.localStorage.getItem("nickname") || "");
 
-const messages = ref<Message[]>([
-  {
-    user: "iefje HHHNNfe",
-    text: "dreaming aboutewv",
-    timestamp: new Date().toISOString(),
-  },
-  {
-    user: "me",
-    text: "okay!",
-    timestamp: new Date().toISOString(),
-  },
-]);
+const messages = ref<Message[]>([]);
 
 const sendMessage = async () => {
   // const timestamp = new Date().toISOString();
@@ -74,6 +61,8 @@ const sendMessage = async () => {
 };
 
 onMounted(async () => {
+  user.value = window.localStorage.getItem("nickname") || "";
+  
   await messageService.startConnection();
 
   messageService.onReceiveMessage((message: Message) => {
@@ -87,7 +76,17 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
 .messages-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
 }
@@ -109,6 +108,8 @@ onUnmounted(() => {
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
+  padding: 1rem;
+  background: white;
 }
 
 .message-input {

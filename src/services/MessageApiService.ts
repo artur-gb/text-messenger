@@ -2,6 +2,9 @@ import * as signalR from "@microsoft/signalr";
 import type { IMessageService } from "./IMessageService";
 import type { Message } from "../types/Message";
 
+/**
+ * MessageApiService - implementation of IMessageService interface
+ */
 export class MessageApiService implements IMessageService {
   private connection: signalR.HubConnection;
   private apiUrl: string;
@@ -39,23 +42,24 @@ export class MessageApiService implements IMessageService {
     });
   }
 
-  // async sendMessage(message: Message): Promise<void> {
-  //   try {
-  //     console.log(message);
-  //     const response = await fetch(`${this.apiUrl}/send`, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify(message),
-  //       // mode: "no-cors",
-  //     });
+  // deprecated
+  async sendMessageToUrl(message: Message): Promise<void> {
+    try {
+      console.log(message);
+      const response = await fetch(`${this.apiUrl}/send`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(message),
+        // mode: "no-cors",
+      });
 
-  //     if (!response.ok) {
-  //       throw new Error("Error sending message");
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
+      if (!response.ok) {
+        throw new Error("Error sending message");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   async sendMessage(...args: any[]): Promise<void> {
     try {

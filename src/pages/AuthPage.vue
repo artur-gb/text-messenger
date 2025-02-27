@@ -17,8 +17,10 @@ const router = useRouter();
 const nickname = ref("");
 
 const saveNickname = () => {
-  localStorage.setItem("nickname", nickname.value);
-  router.push("/messenger");
+  if (nickname.value) {
+    localStorage.setItem("nickname", nickname.value);
+    router.push("/messenger");
+  }
 };
 
 onMounted(() => {

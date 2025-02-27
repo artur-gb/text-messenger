@@ -5,7 +5,7 @@
   >
     <div class="message-header">
       <span class="sender">{{ sender }}</span>
-      <span class="date">{{ date }}</span>
+      <span class="date">{{ new Date(date).toLocaleString("ru-RU") }} </span>
     </div>
     <div class="message-body">{{ text }}</div>
   </div>
