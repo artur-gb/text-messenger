@@ -29,26 +29,24 @@ export class MessageApiService implements IMessageService {
   }
 
   onReceiveMessage(callback: (message: Message) => void) {
-    this.connection.on(
-      "ReceiveMessage",
-      (user: string, text: string) => {
-        const message: Message = {
-          user,
-          text,
-          timestamp: new Date().toISOString(),
-        };
-        callback(message);
-      }
-    );
+    this.connection.on("ReceiveMessage", (user: string, text: string) => {
+      const message: Message = {
+        user,
+        text,
+        timestamp: new Date().toISOString(),
+      };
+      callback(message);
+    });
   }
 
   async sendMessage(message: Message): Promise<void> {
     try {
+      console.log(message);
       const response = await fetch(`${this.apiUrl}/send`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(message),
-        mode: "no-cors",
+        // mode: "no-cors",
       });
 
       if (!response.ok) {

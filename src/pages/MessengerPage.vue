@@ -20,18 +20,20 @@
       </div>
     </div>
 
-    <input v-model="user" placeholder="Ваше имя" />
-    <input
-      v-model="text"
-      placeholder="Введите сообщение"
-      @keyup.enter="sendMessage"
-    />
-    <button @click="sendMessage">Отправить</button>
-    <ion-input v-model="inputValue" type="text" placeholder="placeholder" />
+    <div class="message-input-container">
+      <ion-input
+        v-model="text"
+        type="text"
+        placeholder="Enter text..."
+        class="message-input"
+      />
+      <ion-button @click="sendMessage" class="send-button"> Send </ion-button>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { IonInput, IonButton } from "@ionic/vue";
 import { ref, onMounted, onUnmounted, computed } from "vue";
 import MessageBlobComponent from "../components/MessageBlobComponent.vue";
 import { useMessageService } from "../services/useMessageService";
@@ -41,8 +43,6 @@ const messageService = useMessageService();
 
 const user = ref("me");
 const text = ref("");
-
-const inputValue = ref("");
 
 const nickname = computed(() => window.localStorage.getItem("nickname") || "");
 
@@ -100,5 +100,28 @@ onUnmounted(() => {
 .received {
   display: flex;
   justify-content: flex-start;
+}
+
+.message-input-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.message-input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: white;
+}
+
+.send-button {
+  white-space: nowrap;
+  padding: 10px 16px;
+  border-radius: 8px;
 }
 </style>

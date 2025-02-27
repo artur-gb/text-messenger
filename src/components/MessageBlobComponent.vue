@@ -38,6 +38,7 @@ defineProps<{
 .message-header {
   display: flex;
   justify-content: space-between;
+  gap: 2rem;
   font-size: 12px;
   color: #666;
   margin-bottom: 5px;
